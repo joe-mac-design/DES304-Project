@@ -6,24 +6,19 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("-Movement-")]
-    [SerializeField] private float _moveSpeed;
+    public float _moveSpeed;
 
     [Header("-Utility-")]
-    [SerializeField] private Rigidbody2D _rigidBody;
-    [SerializeField] private Camera _camera;
+    public Rigidbody2D _rigidBody;
+    public Camera _camera;
 
     [Header("-Dash Controls-")]
     public float _dashSpeed;
-    //private float _dashTime = 0.5f;
-    //private float _dashCooldown = 1f;
+    [SerializeField] float _dashCooldown = 50;
+    private bool _canDash = true;
 
     Vector2 _playerMovement;
     Vector2 _mousePosition;
-
-    void Start()
-    {
-
-    }
 
     void Update()
     {
@@ -31,7 +26,6 @@ public class PlayerController : MonoBehaviour
         _playerMovement.y = Input.GetAxisRaw("Vertical");
 
         _playerMovement = _playerMovement.normalized;
-        //_playerMovement = new Vector2(_playerMovement.x, _playerMovement.y).normalized;
 
         _mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
     }
@@ -42,7 +36,25 @@ public class PlayerController : MonoBehaviour
 
         Vector2 _lookDirection = _mousePosition - _rigidBody.position;
         float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
-        _rigidBody.rotation = angle;     
+        _rigidBody.rotation = angle;
+
+        if (_dashCooldown == 0)
+        {
+            _canDash = true;
+        } else
+        {
+            _dashCooldown--;
+        }
+
+        _rigidBody.velocity = Vector2.zero;
+
+        if (Input.GetKeyDown(KeyCode.Space) && _canDash)
+        {
+            _rigidBody.AddForce(_lookDirection * _dashSpeed * Time.fixedDeltaTime);
+            _canDash = false;
+            _dashCooldown = 50;
+        }
+
     }
 
 }
