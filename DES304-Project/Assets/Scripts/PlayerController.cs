@@ -8,14 +8,14 @@ public class PlayerController : MonoBehaviour
     [Header("-Movement-")]
     public float _moveSpeed;
 
-    [Header("-Utility-")]
-    public Rigidbody2D _rigidBody;
-    public Camera _camera;
-
     [Header("-Dash Controls-")]
     public float _dashSpeed;
     [SerializeField] float _dashCooldown = 50;
     private bool _canDash = true;
+
+    [Header("-Objects-")]
+    public Rigidbody2D _rigidBody;
+    public Camera _camera;
 
     Vector2 _playerMovement;
     Vector2 _mousePosition;
