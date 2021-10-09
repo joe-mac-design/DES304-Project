@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     [Header("-Movement-")]
     public float _moveSpeed;
 
@@ -18,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public Camera _camera;
 
     Vector2 _playerMovement;
-    Vector2 _mousePosition;
+    Vector2 _MousePosition;
 
     void Update()
     {
@@ -27,14 +26,14 @@ public class PlayerController : MonoBehaviour
 
         _playerMovement = _playerMovement.normalized;
 
-        _mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+        _MousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
     }
 
     private void FixedUpdate()
     {
         _rigidBody.MovePosition(_rigidBody.position + _playerMovement * _moveSpeed * Time.fixedDeltaTime);
 
-        Vector2 _lookDirection = _mousePosition - _rigidBody.position;
+        Vector2 _lookDirection = _MousePosition - _rigidBody.position;
         float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
         _rigidBody.rotation = angle;
 
@@ -56,5 +55,4 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
 }

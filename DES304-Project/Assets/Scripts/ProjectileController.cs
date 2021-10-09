@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
+    [Header("-Speed-")]
     public float _bulletSpeed;
 
+    [Header("-Objects-")]
     private Transform _player;
     private Vector2 _target;
 
@@ -38,5 +40,4 @@ public class ProjectileController : MonoBehaviour
     {
         Destroy(gameObject);
     }
-
 }
