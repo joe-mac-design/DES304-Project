@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,21 +29,21 @@ public class EnemyController : MonoBehaviour
     {
 
         // Enemy following player
-        if(Vector2.Distance(transform.position, _player.position) > _stoppingDistance)
+        if (Vector2.Distance(transform.position, _player.position) > _stoppingDistance)
         {
             transform.position = Vector2.MoveTowards(transform.position, _player.position, _enemySpeed * Time.deltaTime);
         }
-        else if(Vector2.Distance(transform.position, _player.position) < _stoppingDistance && Vector2.Distance(transform.position, _player.position) > _retreatDistance)
+        else if (Vector2.Distance(transform.position, _player.position) < _stoppingDistance && Vector2.Distance(transform.position, _player.position) > _retreatDistance)
         {
             transform.position = this.transform.position;
-        } 
-        else if(Vector2.Distance(transform.position, _player.position) < _retreatDistance)
+        }
+        else if (Vector2.Distance(transform.position, _player.position) < _retreatDistance)
         {
             transform.position = Vector2.MoveTowards(transform.position, _player.position, -_enemySpeed * Time.deltaTime);
         }
 
         // Spawning Bullet
-        if(_timeBetweenShots <= 0)
+        if (_timeBetweenShots <= 0)
         {
             Instantiate(_bullet, transform.position, Quaternion.identity);
             _timeBetweenShots = _startTimeBetweenShots;

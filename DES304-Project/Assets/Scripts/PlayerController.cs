@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float _dashSpeed;
     [SerializeField] float _dashCooldown = 50;
     private bool _canDash = true;
+    private bool _doDash = false;
 
     [Header("-Objects-")]
     public Rigidbody2D _rigidBody;
@@ -27,6 +28,12 @@ public class PlayerController : MonoBehaviour
         _playerMovement = _playerMovement.normalized;
 
         _MousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+
+        if(Input.GetKeyDown(KeyCode.Space) && _canDash)
+        {
+            _doDash = true;
+        }
+
     }
 
     private void FixedUpdate()
@@ -47,11 +54,12 @@ public class PlayerController : MonoBehaviour
 
         _rigidBody.velocity = Vector2.zero;
 
-        if (Input.GetKeyDown(KeyCode.Space) && _canDash)
+        if (_doDash && _canDash)
         {
             _rigidBody.AddForce(_lookDirection * _dashSpeed * Time.fixedDeltaTime);
             _canDash = false;
             _dashCooldown = 50;
+            _doDash = false;    
         }
 
     }
