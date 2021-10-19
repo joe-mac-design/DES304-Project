@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [Header("-Movement-")]
-    public float _enemySpeed;
+    public float _enemySpeed; 
     public float _stoppingDistance;
     public float _retreatDistance;
 
@@ -27,6 +27,11 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+
+        if(_player == null)
+        {
+            return;
+        }
 
         // Enemy following player
         if (Vector2.Distance(transform.position, _player.position) > _stoppingDistance)

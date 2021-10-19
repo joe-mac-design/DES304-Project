@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _dashCooldown = 50;
     private bool _canDash = true;
     private bool _doDash = false;
+
+    [Header("Health")]
+    public float _defaultHealth;
+
+    [Header("UI")]
+    public TMP_Text _healthText;
 
     [Header("-Objects-")]
     public Rigidbody2D _rigidBody;
@@ -62,5 +69,19 @@ public class PlayerController : MonoBehaviour
             _doDash = false;    
         }
 
+    }
+
+    public void TakeDamage(int projectileDamage)
+    {
+        _defaultHealth -= projectileDamage;
+        HealthCheck();
+    }
+
+    private void HealthCheck()
+    {
+        if (_defaultHealth <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }

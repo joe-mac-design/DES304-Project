@@ -7,6 +7,9 @@ public class ProjectileController : MonoBehaviour
     [Header("-Speed-")]
     public float _bulletSpeed;
 
+    [Header("Projectile Damage")]
+    public int _projectileDamage;
+
     [Header("-Objects-")]
     private Transform _player;
     private Vector2 _target;
@@ -32,6 +35,7 @@ public class ProjectileController : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
+            collision.GetComponent<PlayerController>().TakeDamage(_projectileDamage);
             DestroyProjectile();
         }
     }
