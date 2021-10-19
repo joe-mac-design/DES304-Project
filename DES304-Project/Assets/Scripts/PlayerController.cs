@@ -6,7 +6,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     [Header("-Movement-")]
-    public float _moveSpeed;
+    [SerializeField] private float _moveSpeed;
 
     [Header("-Dash Controls-")]
     public float _dashSpeed;
@@ -15,17 +15,24 @@ public class PlayerController : MonoBehaviour
     private bool _doDash = false;
 
     [Header("Health")]
-    public float _defaultHealth;
+    public float _playerHealth;
+    [SerializeField] private TMP_Text _healthText;
 
-    [Header("UI")]
-    public TMP_Text _healthText;
+    [Header("Raycasts")]
+    [SerializeField] private float _RaycastLength;
+    [SerializeField] private LayerMask _enemyLayer;
 
     [Header("-Objects-")]
-    public Rigidbody2D _rigidBody;
-    public Camera _camera;
+    [SerializeField] private Rigidbody2D _rigidBody;
+    [SerializeField] private Camera _camera;
 
     Vector2 _playerMovement;
     Vector2 _MousePosition;
+
+    private void Start()
+    {
+        UpdateHealth();
+    }
 
     void Update()
     {
@@ -38,9 +45,12 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space) && _canDash)
         {
+            if (Physics.Linecast(transform.position, transform.TransformDirection(Vector3.forward), _enemyLayer))
+            {
+                Debug.Log("Layer " + _enemyLayer + " Hit");
+            }
             _doDash = true;
         }
-
     }
 
     private void FixedUpdate()
@@ -68,20 +78,24 @@ public class PlayerController : MonoBehaviour
             _dashCooldown = 50;
             _doDash = false;    
         }
-
     }
 
     public void TakeDamage(int projectileDamage)
     {
-        _defaultHealth -= projectileDamage;
+        _playerHealth -= projectileDamage;
         HealthCheck();
     }
 
     private void HealthCheck()
     {
-        if (_defaultHealth <= 0)
+        if (_playerHealth <= 0)
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void UpdateHealth()
+    {
+        _healthText.text = _playerHealth.ToString("0");
     }
 }

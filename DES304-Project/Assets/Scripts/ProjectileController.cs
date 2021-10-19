@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class ProjectileController : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag("Player").transform;
 
         _target = new Vector2(_player.position.x, _player.position.y);
+
     }
 
     private void Update()
@@ -36,6 +38,7 @@ public class ProjectileController : MonoBehaviour
         if(collision.CompareTag("Player"))
         {
             collision.GetComponent<PlayerController>().TakeDamage(_projectileDamage);
+            collision.GetComponent<PlayerController>().UpdateHealth();
             DestroyProjectile();
         }
     }
