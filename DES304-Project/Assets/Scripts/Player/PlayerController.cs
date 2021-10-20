@@ -9,17 +9,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed;
 
     [Header("-Dash Controls-")]
-    public float _dashSpeed;
+    [SerializeField] private float _dashSpeed;
     [SerializeField] float _dashCooldown = 50;
-    private bool _canDash = true;
-    private bool _doDash = false;
+    [SerializeField] private bool _canDash = true;
+    [SerializeField] private bool _isDashing = false;
 
     [Header("Health")]
     public float _playerHealth;
     [SerializeField] private TMP_Text _healthText;
 
     [Header("Raycasts")]
-    [SerializeField] private float _RaycastLength;
+    [SerializeField] private float _raycastLength;
     [SerializeField] private LayerMask _enemyLayer;
 
     [Header("-Objects-")]
@@ -43,13 +43,9 @@ public class PlayerController : MonoBehaviour
 
         _MousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
 
-        if(Input.GetKeyDown(KeyCode.Space) && _canDash)
+        if (Input.GetKeyDown(KeyCode.Space) && _canDash)
         {
-            if (Physics.Linecast(transform.position, transform.TransformDirection(Vector3.forward), _enemyLayer))
-            {
-                Debug.Log("Layer " + _enemyLayer + " Hit");
-            }
-            _doDash = true;
+            _isDashing = true;
         }
     }
 
@@ -71,15 +67,30 @@ public class PlayerController : MonoBehaviour
 
         _rigidBody.velocity = Vector2.zero;
 
-        if (_doDash && _canDash)
+        if (_isDashing && _canDash)
         {
             _rigidBody.AddForce(_lookDirection * _dashSpeed * Time.fixedDeltaTime);
             _canDash = false;
             _dashCooldown = 50;
-            _doDash = false;    
+            _isDashing = false;    
+        }
+
+        //Vector2 _raycastDirection = transform.TransformDirection(Vector2.up) * _raycastLength;
+        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, transform.up, _raycastLength, _enemyLayer);
+        if (hitInfo.collider != null)
+        {
+            Debug.Log(hitInfo.collider.gameObject.tag);
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green; 
+        Vector2 _raycastDirection = transform.TransformDirection(Vector2.up) * _raycastLength;
+        Gizmos.DrawRay(transform.position, _raycastDirection);
+    }
+
+    // Health & Damage
     public void TakeDamage(int projectileDamage)
     {
         _playerHealth -= projectileDamage;
