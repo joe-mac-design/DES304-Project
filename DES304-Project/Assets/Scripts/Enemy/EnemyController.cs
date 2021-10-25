@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -58,18 +55,4 @@ public class EnemyController : MonoBehaviour
             _timeBetweenShots -= Time.deltaTime;
         } 
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            DestroySelf();
-        }
-    }
-
-    void DestroySelf()
-    {
-        Destroy(gameObject);
-    }
-
 }
