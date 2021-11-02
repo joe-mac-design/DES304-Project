@@ -4264,6 +4264,8 @@ MonoBehaviour:
   _dashSpeed: 1500
   _dashTime: 0.1
   _dashCooldown: 1
+  _maxDashes: 3
+  _megaDashSpeed: 300
   _playerHealth: 1000
   _healthText: {fileID: 380088279}
   _enemyLayer:
@@ -4541,7 +4543,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Version: 0.0.7'
+  m_text: 'Version: 0.1.0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
