@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed;
 
     [Header("-Dash Controls-")]
-    [SerializeField] private float _dashSpeed = 1500f; // dash speed
+    //[SerializeField] private float _dashSpeed = 1500f; // dash speed
+    [SerializeField] private float _maxDistance = 1f;
     [SerializeField] float _dashTime = 0.1f; // How long the dash is active for
     [SerializeField] float _dashCooldown = 1f; // time between dashes
     [SerializeField] int _maxDashes = 3;
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Raycasts")]
     [SerializeField] private LayerMask _enemyLayer;
+    [SerializeField] private LayerMask _wallLayer;
 
     [Header("-Objects-")]
     [SerializeField] private Rigidbody2D _rigidBody;
@@ -73,8 +75,12 @@ public class PlayerController : MonoBehaviour
         _rigidBody.AddForce(_playerMovement.normalized * _moveSpeed * Time.deltaTime, ForceMode2D.Force);
 
         _lookDirection = _MousePosition - _rigidBody.position;
-        float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
-        _rigidBody.rotation = angle;
+        if (_lookDirection.magnitude > 0.1f)
+        {
+            float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
+            _rigidBody.rotation = angle;
+        }
+        
 
         _rigidBody.velocity = Vector2.zero;
     }
@@ -85,7 +91,7 @@ public class PlayerController : MonoBehaviour
         Vector3 _otherPosition = transform.position;
         foreach (Vector2 _dashClick in _dashQueue)
         {
-            Debug.DrawLine(_dashClick, _otherPosition, Color.white, Mathf.Infinity);
+            Debug.DrawLine(_dashClick, _otherPosition, Color.white, 5f);
             _otherPosition = _dashClick;
             Debug.Log(_dashClick);
         }
@@ -101,7 +107,7 @@ public class PlayerController : MonoBehaviour
         float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
         _rigidBody.rotation = angle;
 
-        _rigidBody.AddForce(_lookDirection * (_distance * _megaDashSpeed));
+        _rigidBody.AddForce(_lookDirection * (_distance * _megaDashSpeed)); // replace this
         _dashQueue.Dequeue();
 
         yield return new WaitForSeconds(0.5f);
@@ -114,7 +120,25 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        _rigidBody.AddForce(_lookDirection * _dashSpeed);
+        //_rigidBody.AddForce(_lookDirection * _dashSpeed);
+
+        Vector2 myDash = _MousePosition - (Vector2)transform.position; // Takes vector of the dash
+
+        if (myDash.magnitude > _maxDistance) // if the dash is too long, make it shorter
+        {
+            myDash = (Vector2)transform.position + myDash.normalized * _maxDistance;
+        }
+
+        RaycastHit2D hitInfo = Physics2D.Linecast(transform.position, (Vector2)transform.position + myDash, _wallLayer);
+        if (hitInfo.collider != null) // if the dash hits a wall, stop it right before wall
+        {
+            myDash = hitInfo.point - (Vector2)transform.position;
+            Debug.Log(hitInfo.point);
+            Debug.Log(hitInfo.rigidbody.name);
+        }
+
+        // Move player in dash direction
+        gameObject.transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + myDash, 200f);
 
         _isDashing = true;
         _canDash = false;
@@ -138,7 +162,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(_dashTime);
 
-        RaycastHit2D hitInfo = Physics2D.Linecast(transform.position, _lastPosition, _enemyLayer);
+        RaycastHit2D hitInfo = Physics2D.Linecast(_lastPosition, transform.position, _enemyLayer);
         if (hitInfo.collider != null)
         {
             Debug.Log(hitInfo.collider.gameObject.tag);
