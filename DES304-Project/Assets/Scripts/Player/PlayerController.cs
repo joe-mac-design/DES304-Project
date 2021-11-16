@@ -120,8 +120,6 @@ public class PlayerController : MonoBehaviour
 
     private void Dash()
     {
-        //_rigidBody.AddForce(_lookDirection * _dashSpeed);
-
         Vector2 myDash = _MousePosition - (Vector2)transform.position; // Takes vector of the dash
 
         if (myDash.magnitude > _maxDistance) // if the dash is too long, make it shorter
@@ -173,6 +171,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Gizmos
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
