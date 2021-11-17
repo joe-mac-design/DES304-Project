@@ -1,12 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuController : MonoBehaviour
-{   
-
+public class GameMenuController : MonoBehaviour
+{
     public static bool GameIsPaused = false;
 
     public GameObject PauseMenu;
@@ -19,7 +17,8 @@ public class MenuController : MonoBehaviour
             if (GameIsPaused)
             {
                 Resume();
-            } else
+            }
+            else
             {
                 Pause();
             }
@@ -41,17 +40,18 @@ public class MenuController : MonoBehaviour
         GameIsPaused = true;
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = false;
     }
-
     public void LoadMenu()
     {
         SceneManager.LoadScene(0);
+        PauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+        GameIsPaused = false;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().enabled = true;
     }
-
     public void LoadLevel()
     {
         SceneManager.LoadScene(1);
     }
-
     public void QuitGame()
     {
         Application.Quit();
