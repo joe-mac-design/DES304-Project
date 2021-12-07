@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _dashTime = 0.1f; // How long the dash is active for
     [SerializeField] float _dashCooldown = 1f; // time between dashes
     [SerializeField] int _maxDashes = 3;
-    public float _megaDashSpeed;
+    //public float _megaDashSpeed;
     public bool _canDash { get; private set; } = true;
     public bool _isDashing { get; private set; } = false;
 
@@ -107,7 +107,11 @@ public class PlayerController : MonoBehaviour
         float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
         _rigidBody.rotation = angle;
 
-        _rigidBody.AddForce(_lookDirection * (_distance * _megaDashSpeed)); // replace this
+        _lastPosition = transform.position;
+
+        //_rigidBody.AddForce(_lookDirection * (_distance * _megaDashSpeed), ForceMode2D.Force); // replace this 
+        _rigidBody.MovePosition((Vector2)_dashQueue.Peek()); // moves to exact line position
+        StartCoroutine(PostDashCheck());
         _dashQueue.Dequeue();
 
         yield return new WaitForSeconds(0.5f);
@@ -167,6 +171,7 @@ public class PlayerController : MonoBehaviour
             if (hitInfo.collider.gameObject.CompareTag("Enemy") && _rigidBody.velocity.magnitude < 10)
             {
                 Destroy(hitInfo.collider.gameObject);
+                StartCoroutine(PostDashCheck());
             }
         }
     }
