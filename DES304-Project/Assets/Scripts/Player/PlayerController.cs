@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     [Header("-Objects-")]
     [SerializeField] private Rigidbody2D _rigidBody;
     [SerializeField] private Camera _camera;
+    public GameObject _retryPanel;
 
     Vector2 _playerMovement;
     Vector2 _MousePosition;
@@ -195,6 +196,7 @@ public class PlayerController : MonoBehaviour
         if (_playerHealth <= 0)
         {
             Destroy(this.gameObject);
+            _retryPanel.SetActive(true);
         }
     }
 
