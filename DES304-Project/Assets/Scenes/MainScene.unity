@@ -5771,7 +5771,7 @@ MonoBehaviour:
   _dashTime: 0.1
   _dashCooldown: 1
   _maxDashes: 3
-  _playerHealth: 3
+  _playerHealth: 5
   _healthText: {fileID: 380088279}
   _enemyLayer:
     serializedVersion: 2
