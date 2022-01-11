@@ -2,6 +2,12 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+
+    /*
+    EnemyController script provided by Blackthornprod on YouTube: https://youtu.be/_Z1t7MNk0c4 
+    Adjusted to fit my game type.
+    */
+
     [Header("-Movement-")]
     public float _enemySpeed; 
     public float _stoppingDistance;

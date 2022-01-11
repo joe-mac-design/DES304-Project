@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameMenuController : MonoBehaviour
 {
+
+    /*
+    Created by myself. 
+    */
+
     public static bool GameIsPaused = false;
 
     public GameObject PauseMenu;

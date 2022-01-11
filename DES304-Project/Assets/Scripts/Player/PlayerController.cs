@@ -5,16 +5,20 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+
+    /*
+     -Basic top-down movement provided by Brackeys on YouTube: https://youtu.be/whzomFgjT50
+     -Dash-to-kill and Multi-Point-Dash is of my own creation, using documentation and unity forums.
+    */
+
     [Header("-Movement-")]
     [SerializeField] private float _moveSpeed;
 
     [Header("-Dash Controls-")]
-    //[SerializeField] private float _dashSpeed = 1500f; // dash speed
     [SerializeField] private float _maxDistance = 1f;
     [SerializeField] float _dashTime = 0.1f; // How long the dash is active for
     [SerializeField] float _dashCooldown = 1f; // time between dashes
-    [SerializeField] int _maxDashes = 3;
-    //public float _megaDashSpeed;
+    [SerializeField] int _maxDashes = 3; // max dashes for the multi-point-dash
     public bool _canDash { get; private set; } = true;
     public bool _isDashing { get; private set; } = false;
 
@@ -45,23 +49,23 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        _playerMovement.x = Input.GetAxisRaw("Horizontal");
-        _playerMovement.y = Input.GetAxisRaw("Vertical");
+        _playerMovement.x = Input.GetAxisRaw("Horizontal"); // horizontal movement stored in a vector 2
+        _playerMovement.y = Input.GetAxisRaw("Vertical"); // vertical movement stored in a vector 2
 
-        _MousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+        _MousePosition = _camera.ScreenToWorldPoint(Input.mousePosition); // gets the users mouse position in the world
 
-        if (_canDash && Input.GetKeyDown(KeyCode.Space))
+        if (_canDash && Input.GetKeyDown(KeyCode.Space)) // Press space to dash
         {
-            _lastPosition = transform.position;
+            _lastPosition = transform.position; // get the players _lastPosition and set it as the new one
             Dash();
         }
 
-        if (Input.GetMouseButtonDown(0) && _dashQueue.Count < _maxDashes)
+        if (Input.GetMouseButtonDown(0) && _dashQueue.Count < _maxDashes) // Calls ClickPosition which gets the players click points in the world
         {
             ClickPosition();
         }
 
-        if (Input.GetButtonUp("Fire2"))
+        if (Input.GetButtonUp("Fire2")) // When fire2 is fired, it calls the _dashQueue which is the ClickPositions and dashes to them in order of click
         {
             if (_dashQueue.Count == 0) Dash();
             else
@@ -73,12 +77,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rigidBody.AddForce(_playerMovement.normalized * _moveSpeed * Time.deltaTime, ForceMode2D.Force);
+        _rigidBody.AddForce(_playerMovement.normalized * _moveSpeed * Time.deltaTime, ForceMode2D.Force); // Moving the player
 
         _lookDirection = _MousePosition - _rigidBody.position;
         if (_lookDirection.magnitude > 0.1f)
         {
-            float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f;
+            float angle = Mathf.Atan2(_lookDirection.y, _lookDirection.x) * Mathf.Rad2Deg - 90f; // This sets the players default rotation
             _rigidBody.rotation = angle;
         }
         
@@ -86,7 +90,7 @@ public class PlayerController : MonoBehaviour
         _rigidBody.velocity = Vector2.zero;
     }
 
-    private void ClickPosition()
+    private void ClickPosition() // Stores the click positions in a queue
     {
         _dashQueue.Enqueue(_MousePosition);
         Vector3 _otherPosition = transform.position;
@@ -110,7 +114,6 @@ public class PlayerController : MonoBehaviour
 
         _lastPosition = transform.position;
 
-        //_rigidBody.AddForce(_lookDirection * (_distance * _megaDashSpeed), ForceMode2D.Force); // replace this 
         _rigidBody.MovePosition((Vector2)_dashQueue.Peek()); // moves to exact line position
         StartCoroutine(PostDashCheck());
         _dashQueue.Dequeue();
@@ -184,7 +187,10 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(transform.position, _lastPosition);
     }
 
-    // Health & Damage
+    /*
+    -Health System Scripts provided by: SpeedTutor on YouTube: https://youtu.be/tzEVJ3tKQUg
+    -Adjusted by me to fit into this project.
+    */
     public void TakeDamage(int projectileDamage)
     {
         _playerHealth -= projectileDamage;

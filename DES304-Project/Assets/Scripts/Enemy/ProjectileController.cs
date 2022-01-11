@@ -2,6 +2,12 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
+
+    /*
+    ProjectileController script provided by Blackthornprod on YouTube: https://youtu.be/_Z1t7MNk0c4 
+    + projectile damage adapted by the tutorial from SpeedTutor on YouTube: https://youtu.be/tzEVJ3tKQUg
+    */
+
     [Header("-Speed-")]
     public float _bulletSpeed;
 
